@@ -1,0 +1,58 @@
+.container {
+  width: 100%;
+  padding-right: 15px;
+}
+
+a {
+  color: red;
+}
+
+.card > p {
+  font-size: 2.2rem;
+}
+
+.card:hover {
+  background: pink;
+}
+
+.block__element--modifier {
+  margin: 0 auto;
+}
+
+#image {
+  border: 1px solid #ccc;
+}
+
+a[href*="example"] {
+  font-size: 2em;
+}
+
+.boring-text::after {
+  content: " <- BORING";
+  color: red;
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+  .card {
+    padding: 1.25em;
+  }
+}
+
+@supports (display: grid) {
+  .main {
+    display: grid;
+  }
+}
+
+@keyframes slidein {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
