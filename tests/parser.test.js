@@ -4,7 +4,7 @@ const parser = require('../src/parser')
 const cssStrings = require('./css-strings')
 
 describe('parser module', () => {
-  test('parse - correctly parses a class rule', () => {
+  test('parse - class selector', () => {
     const str = '.container {  width: 100%;  padding-right: 15px;}'
     const expected = [{
       selector: '.container',
@@ -25,7 +25,7 @@ describe('parser module', () => {
     expect(result).toEqual(expected)
   })
 
-  test('parse - correctly parses multiple class rules', () => {
+  test('parse - class selector - multiple', () => {
     const str = '.container {  width: 100%;  padding-right: 15px;}.card {  margin: 10px;  color: red;}'
     const expected = [
       {
@@ -61,7 +61,7 @@ describe('parser module', () => {
     expect(result).toEqual(expected)
   })
 
-  test('parse - correctly parses a complex class rule', () => {
+  test('parse - complex class selector', () => {
     const str = '.block__element--modifier {  width: 100%;  padding-right: 15px;}'
     const expected = [{
       selector: '.block__element--modifier',
@@ -82,7 +82,7 @@ describe('parser module', () => {
     expect(result).toEqual(expected)
   })
 
-  test('parse - correctly parses multiple complex class rules', () => {
+  test('parse - complex class selector - multiple', () => {
     const str = '.block__element--modifier1 {  width: 100%;  padding-right: 15px;}.block__element--modifier2 {  margin: 10px;  color: red;}'
     const expected = [
       {
@@ -108,6 +108,190 @@ describe('parser module', () => {
           {
             property: 'color',
             value: 'red'
+          }
+        ]
+      }
+    ]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - type selector', () => {
+    const str = 'a {  color: red;}'
+    const expected = [{
+      selector: 'a',
+      declarations: [
+        {
+          property: 'color',
+          value: 'red'
+        }
+      ]
+    }]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - type selector - multiple', () => {
+    const str = 'a {  color: red;}p {  font-size: 2.2rem;}'
+    const expected = [
+      {
+        selector: 'a',
+        declarations: [
+          {
+            property: 'color',
+            value: 'red'
+          }
+        ]
+      },
+      {
+        selector: 'p',
+        declarations: [
+          {
+            property: 'font-size',
+            value: '2.2rem'
+          }
+        ]
+      }
+    ]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - pseudo selector', () => {
+    const str = '.card:hover {  background: pink;}'
+    const expected = [{
+      selector: '.card:hover',
+      declarations: [
+        {
+          property: 'background',
+          value: 'pink'
+        }
+      ]
+    }]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - pseudo selector - multiple', () => {
+    const str = '.card:hover {  background: pink;}.boring-text::after {  content: " <- BORING";  color: red;}'
+    const expected = [
+      {
+        selector: '.card:hover',
+        declarations: [
+          {
+            property: 'background',
+            value: 'pink'
+          }
+        ]
+      },
+      {
+        selector: '.boring-text::after',
+        declarations: [
+          {
+            property: 'content',
+            value: '\" <- BORING\"'
+          },
+          {
+            property: 'color',
+            value: 'red'
+          }
+        ]
+      }
+    ]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - id selector', () => {
+    const str = '#image {  border: 1px solid #ccc;}'
+    const expected = [{
+      selector: '#image',
+      declarations: [
+        {
+          property: 'border',
+          value: '1px solid #ccc'
+        }
+      ]
+    }]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - id selector - multiple', () => {
+    const str = '#image {  border: 1px solid #ccc;}#login {  padding: 20px;}'
+    const expected = [
+      {
+        selector: '#image',
+        declarations: [
+          {
+            property: 'border',
+            value: '1px solid #ccc'
+          }
+        ]
+      },
+      {
+        selector: '#login',
+        declarations: [
+          {
+            property: 'padding',
+            value: '20px'
+          }
+        ]
+      }
+    ]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - attribute selector', () => {
+    const str = 'a[href*="example"] {  font-size: 2em;}'
+    const expected = [{
+      selector: 'a[href*="example"]',
+      declarations: [
+        {
+          property: 'font-size',
+          value: '2em'
+        }
+      ]
+    }]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - attribute selector - multiple', () => {
+    const str = 'a[href*="example"] {  font-size: 2em;}ol[type="a" s] {  list-style-type: lower-alpha;}'
+    const expected = [
+      {
+        selector: 'a[href*="example"]',
+        declarations: [
+          {
+            property: 'font-size',
+            value: '2em'
+          }
+        ]
+      },
+      {
+        selector: 'ol[type="a" s]',
+        declarations: [
+          {
+            property: 'list-style-type',
+            value: 'lower-alpha'
           }
         ]
       }
