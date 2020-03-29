@@ -301,4 +301,25 @@ describe('parser module', () => {
 
     expect(result).toEqual(expected)
   })
+
+  test('parse - multiple selectors for one set of declarations', () => {
+    const str = '.container-fluid, .container-sm, .container-md, .container-lg, .container-xl {  width: 100%;  padding-right: 15px;}'
+    const expected = [{
+      selector: '.container-fluid, .container-sm, .container-md, .container-lg, .container-xl',
+      declarations: [
+        {
+          property: 'width',
+          value: '100%'
+        },
+        {
+          property: 'padding-right',
+          value: '15px'
+        }
+      ]
+    }]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
 })

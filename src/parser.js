@@ -6,8 +6,8 @@ const regex = require('./regex')
 
 const parse = (css) => {
   css = removeNewLines(css)
-  const cssPattern = /(.+?)\{(.+?)\}/g
-
+  const cssPattern = /((?=@(.+?))(.+?)\{(.+?)\}\}|(.+?)\{(.+?)\})/g
+  // console.log(regex.getAllMatches(cssPattern, css))
   return regex.getAllMatches(cssPattern, css).map(m => parseItems(m[0]))
 }
 
