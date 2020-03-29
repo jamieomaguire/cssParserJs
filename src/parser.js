@@ -8,19 +8,27 @@ const parse = (css) => {
   css = removeNewLines(css)
   const cssPattern = /((?=@(.+?))(.+?)\{(.+?)\}\}|(.+?)\{(.+?)\})/g
   // console.log(regex.getAllMatches(cssPattern, css))
-  return regex.getAllMatches(cssPattern, css).map(m => parseItems(m[0]))
+  return regex.getAllMatches(cssPattern, css).map(m => parseItem(m[0]))
 }
 
 const removeNewLines = (str) => {
   return str.replace(/\r\n/g, '')
 }
 
-const parseItems = (str) => {
+const parseItem = (str) => {
+  if (str[0] === '@') {
+    console.log('we have an @ rule! branching off...')
+    return parseRule(str)
+  } 
   const selectorAndStyles = str.split('{')
   const declarations = parseDeclarations(selectorAndStyles[1])
   const item = new cssItem(selectorAndStyles[0].trim(), declarations)
 
   return item
+}
+
+const parseRule = (str) => {
+  console.log(str)
 }
 
 const parseDeclarations = (str) => {

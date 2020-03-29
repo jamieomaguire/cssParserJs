@@ -1,9 +1,24 @@
 @media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
   .card {
     padding: 1.25em;
   }
+}
 
-  .login {
-    margin: 50px;
+@supports (display: grid) {
+  .main {
+    display: grid;
+  }
+}
+
+@keyframes slidein {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(100%);
   }
 }
