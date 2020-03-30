@@ -8,11 +8,16 @@ const cssPattern = /((?=@(.+?))(.+?)\{(.+?)\}\}|(.+?)\{(.+?)\})/g
 
 const parse = (css) => {
   css = removeNewLines(css)
+  css = removeComments(css)
   return regex.getAllMatches(cssPattern, css).map(m => parseItem(m[0]))
 }
 
 const removeNewLines = (str) => {
   return str.replace(/\r\n/g, '')
+}
+
+const removeComments = (str) => {
+  return str.replace(/\/\*(.+?)\*\//g, '')
 }
 
 const parseItem = (str) => {
