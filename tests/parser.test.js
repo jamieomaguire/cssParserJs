@@ -17,7 +17,8 @@ describe('parser module', () => {
           property: 'padding-right',
           value: '15px'
         }
-      ]
+      ],
+      nestedItems: []
     }]
 
     const result = parser.parse(str)
@@ -39,7 +40,8 @@ describe('parser module', () => {
             property: 'padding-right',
             value: '15px'
           }
-        ]
+        ],
+        nestedItems: []
       },
       {
         selector: '.card',
@@ -52,7 +54,9 @@ describe('parser module', () => {
             property: 'color',
             value: 'red'
           }
-        ]
+        ],
+        nestedItems: []
+
       }
     ]
 
@@ -74,7 +78,9 @@ describe('parser module', () => {
           property: 'padding-right',
           value: '15px'
         }
-      ]
+      ],
+      nestedItems: []
+
     }]
 
     const result = parser.parse(str)
@@ -96,7 +102,9 @@ describe('parser module', () => {
             property: 'padding-right',
             value: '15px'
           }
-        ]
+        ],
+        nestedItems: []
+
       },
       {
         selector: '.block__element--modifier2',
@@ -109,7 +117,9 @@ describe('parser module', () => {
             property: 'color',
             value: 'red'
           }
-        ]
+        ],
+        nestedItems: []
+
       }
     ]
 
@@ -127,7 +137,9 @@ describe('parser module', () => {
           property: 'color',
           value: 'red'
         }
-      ]
+      ],
+      nestedItems: []
+
     }]
 
     const result = parser.parse(str)
@@ -145,7 +157,9 @@ describe('parser module', () => {
             property: 'color',
             value: 'red'
           }
-        ]
+        ],
+        nestedItems: []
+
       },
       {
         selector: 'p',
@@ -154,7 +168,9 @@ describe('parser module', () => {
             property: 'font-size',
             value: '2.2rem'
           }
-        ]
+        ],
+        nestedItems: []
+
       }
     ]
 
@@ -172,7 +188,9 @@ describe('parser module', () => {
           property: 'background',
           value: 'pink'
         }
-      ]
+      ],
+      nestedItems: []
+
     }]
 
     const result = parser.parse(str)
@@ -190,7 +208,9 @@ describe('parser module', () => {
             property: 'background',
             value: 'pink'
           }
-        ]
+        ],
+        nestedItems: []
+
       },
       {
         selector: '.boring-text::after',
@@ -203,7 +223,9 @@ describe('parser module', () => {
             property: 'color',
             value: 'red'
           }
-        ]
+        ],
+        nestedItems: []
+
       }
     ]
 
@@ -221,7 +243,9 @@ describe('parser module', () => {
           property: 'border',
           value: '1px solid #ccc'
         }
-      ]
+      ],
+      nestedItems: []
+
     }]
 
     const result = parser.parse(str)
@@ -239,7 +263,9 @@ describe('parser module', () => {
             property: 'border',
             value: '1px solid #ccc'
           }
-        ]
+        ],
+        nestedItems: []
+
       },
       {
         selector: '#login',
@@ -248,7 +274,9 @@ describe('parser module', () => {
             property: 'padding',
             value: '20px'
           }
-        ]
+        ],
+        nestedItems: []
+
       }
     ]
 
@@ -266,7 +294,9 @@ describe('parser module', () => {
           property: 'font-size',
           value: '2em'
         }
-      ]
+      ],
+      nestedItems: []
+
     }]
 
     const result = parser.parse(str)
@@ -284,7 +314,9 @@ describe('parser module', () => {
             property: 'font-size',
             value: '2em'
           }
-        ]
+        ],
+        nestedItems: []
+
       },
       {
         selector: 'ol[type="a" s]',
@@ -293,7 +325,9 @@ describe('parser module', () => {
             property: 'list-style-type',
             value: 'lower-alpha'
           }
-        ]
+        ],
+        nestedItems: []
+
       }
     ]
 
@@ -315,6 +349,42 @@ describe('parser module', () => {
           property: 'padding-right',
           value: '15px'
         }
+      ],
+      nestedItems: []
+
+    }]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - media query', () => {
+    const str = '@media (min-width: 576px) {  .container {    max-width: 540px;  }  .card {    padding: 1.25em;  }}'
+    const expected = [{
+      selector: "@media (min-width: 576px)",
+      declarations: null,
+      nestedItems: [
+        {
+          selector: ".container",
+          declarations: [
+            {
+              property: "max-width",
+              value: "540px"
+            }
+          ],
+          nestedItems: []
+        },
+        {
+          selector: ".card",
+          declarations: [
+            {
+              property: "padding",
+              value: "1.25em"
+            }
+          ],
+          nestedItems: []
+        }
       ]
     }]
 
@@ -322,4 +392,229 @@ describe('parser module', () => {
 
     expect(result).toEqual(expected)
   })
+
+  test('parse - media query - multiple', () => {
+    const str = '@media (min-width: 576px) {  .container {    max-width: 540px;  }  .card {    padding: 1.25em;  }}@media (min-width: 900px) {  .container {    max-width: 700px;  }  .card {    padding: 2.25em;  }}'
+    const expected = [
+      {
+        selector: "@media (min-width: 576px)",
+        declarations: null,
+        nestedItems: [
+          {
+            selector: ".container",
+            declarations: [
+              {
+                property: "max-width",
+                value: "540px"
+              }
+            ],
+            nestedItems: []
+          },
+          {
+            selector: ".card",
+            declarations: [
+              {
+                property: "padding",
+                value: "1.25em"
+              }
+            ],
+            nestedItems: []
+          }
+        ]
+      },
+      {
+        selector: "@media (min-width: 900px)",
+        declarations: null,
+        nestedItems: [
+          {
+            selector: ".container",
+            declarations: [
+              {
+                property: "max-width",
+                value: "700px"
+              }
+            ],
+            nestedItems: []
+          },
+          {
+            selector: ".card",
+            declarations: [
+              {
+                property: "padding",
+                value: "2.25em"
+              }
+            ],
+            nestedItems: []
+          }
+        ]
+      }
+    ]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - supports rule', () => {
+    const str = '@supports (display: grid) {  .main {    display: grid;  }}'
+    const expected = [{
+      selector: "@supports (display: grid)",
+      declarations: null,
+      nestedItems: [
+        {
+          selector: ".main",
+          declarations: [
+            {
+              property: "display",
+              value: "grid"
+            }
+          ],
+          nestedItems: []
+        }
+      ]
+    }]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - supports rule - multiple', () => {
+    const str = '@supports (display: grid) {  .main {    display: grid;  }}@supports not (display: grid) {  .main {    display: flex;  }}'
+    const expected = [
+      {
+        selector: "@supports (display: grid)",
+        declarations: null,
+        nestedItems: [
+          {
+            selector: ".main",
+            declarations: [
+              {
+                property: "display",
+                value: "grid"
+              }
+            ],
+            nestedItems: []
+          }
+        ]
+      },
+      {
+        selector: "@supports not (display: grid)",
+        declarations: null,
+        nestedItems: [
+          {
+            selector: ".main",
+            declarations: [
+              {
+                property: "display",
+                value: "flex"
+              }
+            ],
+            nestedItems: []
+          }
+        ]
+      }
+    ]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - keyframes rule', () => {
+    const str = '@keyframes slidein {  from {    transform: translateX(0%);  }  to {    transform: translateX(100%);  }}'
+    const expected = [{
+      selector: "@keyframes slidein",
+      declarations: null,
+      nestedItems: [
+        {
+          selector: "from",
+          declarations: [
+            {
+              property: "transform",
+              value: "translateX(0%)"
+            }
+          ],
+          nestedItems: []
+        },
+        {
+          selector: "to",
+          declarations: [
+            {
+              property: "transform",
+              value: "translateX(100%)"
+            }
+          ],
+          nestedItems: []
+        }
+      ]
+    }]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
+  test('parse - keyframes rule - multiple', () => {
+    const str = '@keyframes slidein {  from {    transform: translateX(0%);  }  to {    transform: translateX(100%);  }}@keyframes slideout {  from {    transform: translateX(100%);  }  to {    transform: translateX(0%);  }}'
+    const expected = [
+      {
+        selector: "@keyframes slidein",
+        declarations: null,
+        nestedItems: [
+          {
+            selector: "from",
+            declarations: [
+              {
+                property: "transform",
+                value: "translateX(0%)"
+              }
+            ],
+            nestedItems: []
+          },
+          {
+            selector: "to",
+            declarations: [
+              {
+                property: "transform",
+                value: "translateX(100%)"
+              }
+            ],
+            nestedItems: []
+          }
+        ]
+      },
+      {
+        selector: "@keyframes slideout",
+        declarations: null,
+        nestedItems: [
+          {
+            selector: "from",
+            declarations: [
+              {
+                property: "transform",
+                value: "translateX(100%)"
+              }
+            ],
+            nestedItems: []
+          },
+          {
+            selector: "to",
+            declarations: [
+              {
+                property: "transform",
+                value: "translateX(0%)"
+              }
+            ],
+            nestedItems: []
+          }
+        ]
+      }
+    ]
+
+    const result = parser.parse(str)
+
+    expect(result).toEqual(expected)
+  })
+
 })
